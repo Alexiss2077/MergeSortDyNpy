@@ -2,135 +2,127 @@ class MergeSorter:
     """
     Clase que contiene la lógica de ordenamiento Merge Sort.
     """
+    def __init__(self):
+        self.Mezclas    = 0
+        self.Divisiones = 0
 
     # =======================================================
-    # MÉTODO MERGE 
+    # MÉTODO MERGE (Fusión de listas)
     # =======================================================
-
-    SwapCount = 0       
-    ComparisonCount = 0 
     def merge(self, my_list, left, right):
         """
-        Mezcla dos listas ordenadas ('izquierda' y 'derecha') guardando
-        el resultado en 'lista_destino' usando el índice 'k'.
+        Mezcla dos listas ordenadas ('left' y 'right') guardando
+        el resultado en 'my_list' (la lista destino).
         """
         i, j, k = 0, 0, 0  # Índices para izquierda, derecha y destino
 
         # 1. Comparar y mover el menor a la lista destino
-        while i < len(left) and j < len(right): 
-            self.ComparisonCount += 1  # Contar comparación
-            if left[i] < right[j]: # Si el de la izquierda es menor
-                my_list[k] = left[i] # Sobrescribimos usando k
-                self.SwapCount +=1
+        while i < len(left) and j < len(right): # Mientras haya elementos en ambas listas
+            if left[i] < right[j]: # El de la izquierda es menor
+                my_list[k] = left[i] # Copiar a la lista destino
                 i += 1
-            else:
-                my_list[k] = right[j]
-                self.SwapCount +=1   # Sobrescribimos usando k
+            else: # El de la derecha es menor o igual
+                my_list[k] = right[j] # Copiar a la lista destino
                 j += 1
-            k += 1 # Avanzamos una casilla en el destino
+            k += 1
 
         # 2. Si sobraron elementos en la izquierda, los copiamos
-        while i < len(left): # Mientras i sea menor al tamaño de la izquierda
-            my_list[k] = left[i]
-            self.SwapCount +=1
+        while i < len(left): # Mientras queden en la izquierda
+            my_list[k] = left[i] # Copiar a la lista destino
             i += 1
             k += 1
 
         # 3. Si sobraron elementos en la derecha, los copiamos
-        while j < len(right):
-            my_list[k] = right[j]
-            self.SwapCount +=1
+        while j < len(right): # Mientras queden en la derecha
+            my_list[k] = right[j] # Copiar a la lista destino
             j += 1
             k += 1
             
-        print(my_list)
-  
 
     # =======================================================
     # OPCIÓN 1: MERGE SORT RECURSIVO (Divide y Vencerás)
     # =======================================================
     def sort_direct(self, my_list):
-
-        print(my_list)
-        # 1. Caso Base: Una lista de 0 o 1 elemento ya está ordenada
+        # 1. Caso Base: Una lista de 0 o 1 elemento ya esta ordenada
         if len(my_list) <= 1:
             return
-
+        
         # 2. Dividir: Crear copias de las mitades
-        mid = len(my_list) // 2
-        left = my_list[:mid]
-        right = my_list[mid:]
+        mid = len(my_list) // 2 # Índice medio
+        self.Divisiones += 1
+        
+        left = my_list[:mid] # Mitad izquierda
+        right = my_list[mid:] # Mitad derecha
+
+        print(f"Dividir: {my_list} -> {left} | {right}")
 
         # 3. Vencerás: Ordenar recursivamente cada mitad
-        self.sort_direct(left)  # Ordena la mitad izquierda
-        self.sort_direct(right) # Ordena la mitad derecha
+        self.sort_direct(left)   # Ordena la mitad izquierda
+        self.sort_direct(right)  # Ordena la mitad derecha
 
-        # 4. Combinar: Usar los 3 índices para unir todo en my_list
-        # Nota: 'my_list' ya tiene el tamaño correcto, así que 'k' funciona perfecto.
-        self.merge(my_list, left, right)
+        # 4. Combinar: Usar el método merge
+        self.Mezclas += 1
+        self.merge(my_list, left, right) # Mezclar las dos mitades ordenadas
 
+        print(f"Mezclar : {left} + {right} ---> Queda {my_list}")
 
     # =======================================================
     # OPCIÓN 2: MERGE SORT NATURAL (Por Secuencias)
     # =======================================================
     def sort_natural(self, my_list):
-        # Bucle principal del Merge Sort Natural
-        ordenado = False  # Bucle hasta que la lista esté ordenada
         
-        while not ordenado: # Repetir hasta ordenar
+        while True:
             # 1. Buscar secuencias que ya vienen ordenadas (runs)
-            runs = self.get_natural_runs(my_list)
+            runs = self.get_natural_runs(my_list) # Lista de secuencias ordenadas
             
-            # Si solo hay 1 secuencia, terminamos
+            # Si solo hay 1 secuencia (o ninguna), terminamos
             if len(runs) <= 1:
-                ordenado = True
                 return
 
-            nuevas_secuencias = [] # Lista para las nuevas secuencias fusionadas
+            self.Divisiones += 1
+            nuevas_secuencias = [] # Para guardar las nuevas secuencias mezcladas
             
             # 2. Mezclar parejas de secuencias
             while len(runs) > 1:
-                seq1 = runs.pop(0) # Extraemos la primera secuencia
-                print(seq1)
-                seq2 = runs.pop(0) # Extraemos la segunda secuencia
-                print(seq2)
+                seq1 = runs.pop(0) # Primera secuencia
+                seq2 = runs.pop(0) # Segunda secuencia
+                print(f"Mezclando secuencias: {seq1} + {seq2}")
                 
-                # Creamos una lista vacía pero con "espacios reservados" (ceros)
-                # del tamaño exacto para que el índice 'k' pueda escribir en ella.
-                tamano_total = len(seq1) + len(seq2)
-                mezclar = [0] * tamano_total         
+                # Crear espacio para la mezcla
+                tamano_total = len(seq1) + len(seq2) # Tamaño combinado
+                mezclar = [0] * tamano_total # Lista vacía para la mezcla        
                 
-                # Ahora sí podemos usar el método merge con i, j, k
-                self.merge(mezclar, seq1, seq2)
+                # Mezclamos
+                self.Mezclas += 1
+                self.merge(mezclar, seq1, seq2) # Mezclar las dos secuencias
                 
-                # Agregamos la secuencia fusionada a la lista de nuevas secuencias
-                nuevas_secuencias.append(mezclar)
+                nuevas_secuencias.append(mezclar) # Guardar la secuencia mezclada
                         
-            if runs: # Si hay una secuencia restante
-                nuevas_secuencias.append(runs[0]) # Agregarla tal cual
-                print(nuevas_secuencias)
+            # Si quedó una secuencia huérfana (impar), la pasamos a la siguiente ronda
+            if runs: 
+                nuevas_secuencias.append(runs[0]) # Agregar la última secuencia sin mezclar
+                print(f" Secuencia huérfana: {runs[0]}")
             
-            # 3. Reconstruir la lista original con las secuencias fusionadas
-            my_list.clear() # Vaciamos la lista original
-            for seq in nuevas_secuencias: # Agregamos cada secuencia fusionada
-                my_list.extend(seq) # Reconstruimos la lista original
-               
+            # 3. Reconstruir la lista original completa para la siguiente iteración
+            my_list.clear() # Vaciar la lista original
+            for seq in nuevas_secuencias: # Agregar las nuevas secuencias mezcladas
+                my_list.extend(seq) # Añadir los elementos de la secuencia
+            
+            # print(f"--- Fin de pasada: {my_list} ---")
 
     def get_natural_runs(self, my_list):
         """Detecta partes de la lista que ya están ordenadas."""
         if not my_list: return [] # Lista vacía
         
         runs = [] # Lista de secuencias ordenadas
-        actual = [my_list[0]] # Lista para la secuencia actual
+        actual = [my_list[0]] # Iniciar la primera secuencia
         
-        for i in range(1, len(my_list)): # Empezamos desde el segundo elemento
-            self.ComparisonCount += 1  # Contar comparación
-            if my_list[i] >= my_list[i-1]: #mientras i sea mayor o igual a i-1
-                actual.append(my_list[i]) # Agregamos a la secuencia actual
-                
-            else: # Si i es menor que i-1
-                runs.append(actual)  # Guardamos la secuencia actual             
-                actual = [my_list[i]] # Empezamos una nueva secuencia
+        for i in range(1, len(my_list)): # Desde el segundo elemento
+            if my_list[i] >= my_list[i-1]: # Si sigue en orden ascendente
+                actual.append(my_list[i]) # Agregar a la secuencia actual
+            else: # Si se rompe el orden
+                runs.append(actual)   # Guardar la secuencia actual
+                actual = [my_list[i]]  # Iniciar una nueva secuencia
 
-        runs.append(actual)
-        return runs
+        runs.append(actual) # Guardar la última secuencia
+        return runs 

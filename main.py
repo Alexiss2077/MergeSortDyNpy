@@ -1,14 +1,15 @@
 import random
-from merge_sort import MergeSorter
+from merge_sort import MergeSorter  
 
 def main():
     sorter = MergeSorter()
     
-    print("=== ORDENAMIENTO ===")
+    print("\n=== ORDENAMIENTO ===")
     
-    # 1. Generar Lista
+    # 1. Generar Lista Aleatoria
     try:
-        n = int(input("¿Cuántos números deseas ordenar? "))
+        entrada = input("¿Cuántos números deseas ordenar? (Enter para 10): ")
+        n = int(entrada) if entrada else 10 # Valor por defecto
     except ValueError:
         n = 10
         
@@ -17,43 +18,30 @@ def main():
 
     # 2. Menú
     print("\nElige el método:")
-    print("1. Merge Sort Recursivo")
+    print("1. Merge Sort Directo")
     print("2. Merge Sort Natural")
     opcion = input("Opción > ")
 
     # 3. Ordenar
-    if opcion == "1":
+    if opcion == "1": # Merge Sort Directo
         print("\n--> Ordenando recursivamente...")
+        sorter.Mezclas    = 0
+        sorter.Divisiones = 0
         sorter.sort_direct(my_list)
+
     elif opcion == "2":
         print("\n--> Ordenando naturalmente...")
+        sorter.Mezclas    = 0
+        sorter.Divisiones = 0
         sorter.sort_natural(my_list)
+        
     else:
         print("Opción no válida.")
-
-    
-    if opcion == "1":
-        # Reiniciar contadores
-        sorter.SwapCount = 0
-        sorter.ComparisonCount = 0
-        
-        sorter.sort_direct(my_list)
-        
-        print(f"Comparaciones: {sorter.ComparisonCount}")
-        print(f"Movimientos: {sorter.SwapCount}")
-
-    elif opcion == "2":
-        # Reiniciar contadores
-        sorter.SwapCount = 0
-        sorter.ComparisonCount = 0
-        
-        sorter.sort_natural(my_list)
-        
-        print(f"Comparaciones: {sorter.ComparisonCount}")
-        print(f"Movimientos: {sorter.SwapCount}")
+        return
 
     # 4. Resultado
-    print(f"\n[Ordenada]: {my_list} ")
+    print(f"\n[Ordenada]: {my_list}")
+    print(f"Estadísticas -> Divisiones: {sorter.Divisiones} | Mezclas: {sorter.Mezclas}")
 
 if __name__ == "__main__":
     main()
