@@ -28,12 +28,14 @@ def main():
         sorter.Mezclas    = 0
         sorter.Divisiones = 0
         sorter.sort_direct(my_list)
+        return
 
     elif opcion == "2":
         print("\n--> Ordenando naturalmente...")
         sorter.Mezclas    = 0
         sorter.Divisiones = 0
         sorter.sort_natural(my_list)
+        return
         
     else:
         print("Opción no válida.")
