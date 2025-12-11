@@ -2,9 +2,6 @@ class MergeSorter:
     """
     Clase que contiene la lógica de ordenamiento Merge Sort.
     """
-    def __init__(self):
-        self.Mezclas    = 0
-        self.Divisiones = 0
 
     # =======================================================
     # MÉTODO MERGE (Fusión de listas)
@@ -40,7 +37,7 @@ class MergeSorter:
             
 
     # =======================================================
-    # OPCIÓN 1: MERGE SORT RECURSIVO (Divide y Vencerás)
+    # OPCIÓN 1: MERGE SORT RECURSIVO
     # =======================================================
     def sort_direct(self, my_list):
         # 1. Caso Base: Una lista de 0 o 1 elemento ya esta ordenada
@@ -49,7 +46,6 @@ class MergeSorter:
         
         # 2. Dividir: Crear copias de las mitades
         mid = len(my_list) // 2 # Índice medio
-        self.Divisiones += 1
         
         left = my_list[:mid] # Mitad izquierda
         right = my_list[mid:] # Mitad derecha
@@ -60,8 +56,7 @@ class MergeSorter:
         self.sort_direct(left)   # Ordena la mitad izquierda
         self.sort_direct(right)  # Ordena la mitad derecha
 
-        # 4. Combinar: Usar el método merge
-        self.Mezclas += 1
+        # 4. Combinar: Usar el método merge para mezclar
         self.merge(my_list, left, right) # Mezclar las dos mitades ordenadas
 
         print(f"Mezclar : {left} + {right} ---> Queda {my_list}")
@@ -76,10 +71,9 @@ class MergeSorter:
             runs = self.get_natural_runs(my_list) # Lista de secuencias ordenadas
             
             # Si solo hay 1 secuencia (o ninguna), terminamos
-            if len(runs) <= 1:
+            if len(runs) <= 1: # Lista ya ordenada
                 return
 
-            self.Divisiones += 1
             nuevas_secuencias = [] # Para guardar las nuevas secuencias mezcladas
             
             # 2. Mezclar parejas de secuencias
@@ -92,8 +86,6 @@ class MergeSorter:
                 tamano_total = len(seq1) + len(seq2) # Tamaño combinado
                 mezclar = [0] * tamano_total # Lista vacía para la mezcla        
                 
-                # Mezclamos
-                self.Mezclas += 1
                 self.merge(mezclar, seq1, seq2) # Mezclar las dos secuencias
                 
                 nuevas_secuencias.append(mezclar) # Guardar la secuencia mezclada
@@ -121,6 +113,7 @@ class MergeSorter:
             if my_list[i] >= my_list[i-1]: # Si sigue en orden ascendente
                 actual.append(my_list[i]) # Agregar a la secuencia actual
             else: # Si se rompe el orden
+                #self.Divisiones += 1
                 runs.append(actual)   # Guardar la secuencia actual
                 actual = [my_list[i]]  # Iniciar una nueva secuencia
 
