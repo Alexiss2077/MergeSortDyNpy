@@ -1,4 +1,4 @@
-class MergeSorter:
+class MergeSorter:       ###
     """
     Clase que contiene la lógica de ordenamiento Merge Sort.
     """
